@@ -1,0 +1,56 @@
+ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
+..+...+....+..+...+...+.............+..+.......+..+...+...............+.+..+..........+...+.....+................+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.....+.....+......+...+............+...+......+.........+...+...+..........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+...+......+.....+....+.....+....+............+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.+......+.+........+......+....+......+............+..+...+...+.+..............+....+...+............+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+....+..............+.......+...+......+.....+...+..........+..+.+........+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.....+.+...........+......+....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:IN
+State or Province Name (full name) [Some-State]:Tamilnadu
+Locality Name (eg, city) []:Chennai
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:sathishtech.com
+Organizational Unit Name (eg, section) []:Technology
+Common Name (e.g. server FQDN or YOUR name) []:*sathishtech.com
+Email Address []:
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:ubuntu
+An optional company name []:Sathishtech Ltd
+root@ubuntu:/home# ls
+server.csr  server.key  user
+root@ubuntu:/home#
+
+
+
+
+<VirtualHost 192.168.0.1:443>
+
+    DocumentRoot /var/www/html2
+
+    ServerName www.yourdomain.com
+
+        SSLEngine on
+
+        SSLCertificateFile /path/to/your_domain_name.crt
+
+        SSLCertificateKeyFile /path/to/your_private.key
+
+        SSLCertificateChainFile /path/to/cabundle.crt
+
+    </VirtualHost>
+
+
+Test your new config file by running the following command:       
+apachectl configtest
+
+If successfully tested, restart Apache by running the following commands:       
+apachectl stop
+ apachectl start
+
+
+    
