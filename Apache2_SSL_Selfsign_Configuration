@@ -1,0 +1,57 @@
+
+root@ubuntu:/home# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+.+...+........+.......+...+.....+.......+......+......+...+..+....+..+.......+..                                                                                                                                                             ...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+......+..                                                                                                                                                             ......+......+.+............+..+.+..+.......+...+..+...+................+..+....                                                                                                                                                             +...+.....+.+.....+.+.....+....+.....+.......+.....+....+.....+.........+.......                                                                                                                                                             ...+..+....+...+...........+....+......+.....+.+++++++++++++++++++++++++++++++++                                                                                                                                                             ++++++++++++++++++++++++++++++++*...........+......+......+.........+......+.+..                                                                                                                                                             ............+.........+.+.........+..+....+......+..+.+..............+.......+..                                                                                                                                                             .+..+.............+..+.+...+..+...+.........+...+....+...+......+......+........                                                                                                                                                             +.+..+...+....+..+.........+.+.....+.+............+.....+......+......+.........                                                                                                                                                             ......+.........................+........+......+......+.........+.+.....+.+....                                                                                                                                                             .....+..................+..+.+...+.....+................+........+.+++++++++++++                                                                                                                                                             ++++++++++++++++++++++++++++++++++++++++++++++++++++
+...+......+.......+...........+....+........+............+++++++++++++++++++++++                                                                                                                                                             ++++++++++++++++++++++++++++++++++++++++++*...+....+.....+......+.......+.......                                                                                                                                                             ..........+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++                                                                                                                                                             ++*..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:IN
+State or Province Name (full name) [Some-State]:Tamilnadu
+Locality Name (eg, city) []:Chennai
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Sathishtech Ltd
+Organizational Unit Name (eg, section) []:Technology
+Common Name (e.g. server FQDN or YOUR name) []:*sathishtech.com
+Email Address []:
+
+root@ubuntu:/home# nano /etc/apache2/sites-available/sathishtech.conf
+
+<VirtualHost *:443>
+   ServerName 192.168.1.11
+   DocumentRoot /var/www/html
+
+   SSLEngine on
+   SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+   SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+</VirtualHost>
+
+
+root@ubuntu:/home# nano /var/www/html/index.html
+
+Hi Welcome 
+
+root@ubuntu:/home# a2ensite sathishtech.conf
+Enabling site sathishtech.
+To activate the new configuration, you need to run:
+  systemctl reload apache2
+
+root@ubuntu:/home# apache2ctl configtest
+AH00558: apache2: Could not reliably determine the server's fully qualified doma                                                                                                                                                             in name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress th                                                                                                                                                             is message
+Syntax OK
+
+root@ubuntu:/home# systemctl reload apache2
+root@ubuntu:/home# nano /etc/apache2/sites-available/sathishtech.conf
+
+<VirtualHost *:80>
+        ServerName 192.168.1.11
+        Redirect / https:/192.168.1.11/
+</VirtualHost>
+
+root@ubuntu:/home# apachectl configtest
+AH00558: apache2: Could not reliably determine the server's fully qualified doma                                                                                                                                                             in name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress th                                                                                                                                                             is message
+Syntax OK
+root@ubuntu:/home# systemctl reload apache2
