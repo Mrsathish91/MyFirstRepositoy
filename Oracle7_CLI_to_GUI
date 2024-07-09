@@ -1,0 +1,19 @@
+******************************************************
+In Oracle -7
+******************************************************
+yum update -y
+yum groupinstall "Server with GUI"
+systemctl set-default graphical
+
+
+******************************************************
+In Oracle -8
+******************************************************
+
+
+# dnf update -y
+# dnf groupinstall -y "GNOME"
+# dnf install -y gdm
+# systemctl enable gdm 
+# systemctl set-default graphical.target
+# reboot
