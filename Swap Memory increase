@@ -1,0 +1,10 @@
+swapoff /swapfile
+free -h
+
+cd /
+rm swapfile
+ls
+dd if=/dev/zero of=/swapfile bs=1M count=YOUR_MEGABYTE_NUMBER_HERE
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
