@@ -1,0 +1,30 @@
+
+************************************Using Pagekite***************************************************
+$ curl -O https://pagekite.net/pk/pagekite.py
+$ python pagekite.py 80 yourname.pagekite.me
+
+
+
+
+*****************************************************************************************************
+
+
+
+***********************************Using Serveo******************************************************
+The -R option instructs your SSH client to request port forwarding from the server and proxy requests to the specified host and port (usually localhost). A subdomain of serveo.net will be assigned to forward HTTP traffic.
+
+Request multiple tunnels at once
+ssh -R 80:localhost:8888 -R 80:localhost:9999 serveo.net
+The target server doesn't have to be on localhost
+ ssh -R 80:example.com:80 serveo.net
+Request a particular subdomain
+The subdomain is chosen deterministically based on your IP address, the provided SSH username, and subdomain availability, so you'll often get the same subdomain between restarts. You can also request a particular subdomain:
+
+ssh -R incubo:80:localhost:8888 serveo.net
+ssh -R incubo.serveo.net:80:localhost:8888 serveo.net
+Change the SSH username to get assigned a different subdomain:
+
+ssh -R 80:localhost:8888 foo@serveo.net
+ssh -R 80:localhost:8888 -l foo serveo.net
+****************************************************************************************************
+
