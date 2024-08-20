@@ -12,6 +12,8 @@ vgextend Vgroup1 /dev/sdd
 
 lvcreate -L 50G -n LVM1 Vgroup1
 
+lvextend -l +100%FREE LVM1 Vgroup1
+
 mkfs.ext4 /dev/Vgroup1/LVM1
 
 mount /dev/Vgroup1/LVM1 /mnt/
