@@ -1,0 +1,17 @@
+Create LVM Partition in Linux
+=================================================
+pvs 
+vgs
+lvs
+=================================================
+pvcreate /dev/sdb /dev/sdc
+
+vgcreate Vgroup1 /dev/sdb /dev/sdc
+
+lvcreate -L 50G -n LVM1 Vgroup1
+
+mkfs.ext4 /dev/Vgroup1/LVM1
+
+
+
+
