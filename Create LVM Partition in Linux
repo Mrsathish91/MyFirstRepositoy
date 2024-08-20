@@ -8,9 +8,18 @@ pvcreate /dev/sdb /dev/sdc
 
 vgcreate Vgroup1 /dev/sdb /dev/sdc
 
+vgextend Vgroup1 /dev/sdd
+
 lvcreate -L 50G -n LVM1 Vgroup1
 
 mkfs.ext4 /dev/Vgroup1/LVM1
+
+mount /dev/Vgroup1/LVM1 /mnt/
+
+lvextend -L +2G /dev/Vgroup1/LVM
+
+resize2fs /dev/Vgroup1/LVM
+
 
 
 
