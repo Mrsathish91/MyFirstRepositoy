@@ -33,7 +33,7 @@ root@ubuntu:/home# nano /etc/apache2/sites-available/sathishtech.conf
 root@ubuntu:/home# nano /var/www/html/index.html
 
 Hi Welcome 
-
+root@ubuntu:/home# a2enmod ssl
 root@ubuntu:/home# a2ensite sathishtech.conf
 Enabling site sathishtech.
 To activate the new configuration, you need to run:
