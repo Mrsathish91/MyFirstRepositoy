@@ -1,0 +1,71 @@
+select * from wp_options;
+
+update wp_options set option_value="http://172.22.100.94/" where option_name="siteurl";
+
+select * from wp_options where option_name="siteurl";
+
+
+select * from wp_options where option_name="home";
+
+ update wp_options set option_value="http://172.22.100.94/" where option_name="home";
+
+
+mysql> update wp_options set option_value="http://172.22.100.94/" where option_name="home";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+==================================================================================================================
+
+root@stagingnew:/srv/www/wordpress# mysql -u root -D wordpress
+
+
+mysql> select * from wp_options where option_name="home";
++-----------+-------------+-----------------------+----------+
+| option_id | option_name | option_value          | autoload |
++-----------+-------------+-----------------------+----------+
+|         2 | home        | http://172.22.100.94/ | yes      |
++-----------+-------------+-----------------------+----------+
+1 row in set (0.01 sec)
+
+
+
+mysql> select * from wp_options where option_name="siteurl";
++-----------+-------------+----------------------------+----------+
+| option_id | option_name | option_value               | autoload |
++-----------+-------------+----------------------------+----------+
+|         1 | siteurl     | https://www.allsectech.com | yes      |
++-----------+-------------+----------------------------+----------+
+1 row in set (0.01 sec)
+
+mysql> update wp_options set option_value="http://172.22.100.94/" where option_name="siteurl";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from wp_options where option_name="siteurl";
++-----------+-------------+-----------------------+----------+
+| option_id | option_name | option_value          | autoload |
++-----------+-------------+-----------------------+----------+
+|         1 | siteurl     | http://172.22.100.94/ | yes      |
++-----------+-------------+-----------------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from wp_options where option_name="home";
++-----------+-------------+----------------------------+----------+
+| option_id | option_name | option_value               | autoload |
++-----------+-------------+----------------------------+----------+
+|         2 | home        | https://www.allsectech.com | yes      |
++-----------+-------------+----------------------------+----------+
+1 row in set (0.00 sec)
+
+mysql> update wp_options set option_value="http://172.22.100.94/" where option_name="home";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from wp_options where option_name="home";
++-----------+-------------+-----------------------+----------+
+| option_id | option_name | option_value          | autoload |
++-----------+-------------+-----------------------+----------+
+|         2 | home        | http://172.22.100.94/ | yes      |
++-----------+-------------+-----------------------+----------+
+1 row in set (0.01 sec)
+
