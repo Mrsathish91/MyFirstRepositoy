@@ -1,0 +1,9 @@
+sudo systemctl restart kubelet
+
+nc -zv k8smaster.sathishtech.com 6443
+
+nc -zv k8sworker1 10250
+
+kubeadm token list
+
+kubeadm token create --print-join-command
