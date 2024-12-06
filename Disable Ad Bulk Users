@@ -41,3 +41,51 @@ foreach ($user in $users) {
 
     Write-Host "Completed processing for user: $userName"
 }
+
+========================================================================================================
+
+For Disable Single User
+
+=========================================================================================================
+
+# Import the Active Directory module
+Import-Module ActiveDirectory
+
+# Prompt the user to enter the username of the user to be processed
+$userName = Read-Host "Enter the username of the user to disable"
+
+# Define the "Disabled" OU path
+$disabledOU = "OU=Disabled,DC=sathishtech,DC=com"  # Adjust to your actual "Disabled" OU path
+
+# Disable the user account
+Disable-ADAccount -Identity $userName
+Write-Host "Disabled user: $userName"
+
+# Move the user to the "Disabled" OU
+$currentUser = Get-ADUser -Identity $userName
+Move-ADObject -Identity $currentUser.DistinguishedName -TargetPath $disabledOU
+Write-Host "Moved user $userName to the 'Disabled' OU"
+
+# Get the user's group memberships
+$groups = Get-ADUser -Identity $userName -Properties MemberOf | Select-Object -ExpandProperty MemberOf
+
+# Remove the user from all groups
+foreach ($group in $groups) {
+    Remove-ADGroupMember -Identity $group -Members $userName -Confirm:$false
+    Write-Host "Removed user $userName from group $group"
+}
+
+# Add text to the user's description field
+$deactivationDate = "06122024"  # You can customize this date if needed
+$descriptionText = "-Deactivated on $deactivationDate"
+
+# Get the current description and append the deactivation text
+$currentDescription = (Get-ADUser -Identity $userName -Properties Description).Description
+$newDescription = if ($currentDescription) { "$currentDescription $descriptionText" } else { $descriptionText }
+
+# Update the user's description
+Set-ADUser -Identity $userName -Description $newDescription
+Write-Host "Updated description for user $userName"
+
+Write-Host "Completed processing for user: $userName"
+===================================================================================================================================
