@@ -1,0 +1,63 @@
+
+
+
+===============================================================================================================================
+FirstName,LastName,UserName,Password,Department,Description,Office,JobTitle,Company
+Pall,Gov,Dha,Password123,IT,"New IT Administrator","Building A","System Administrator","SathishTech"
+Ranjith,Smith,Rsmith,Password456,HR,"HR Manager","Building B","HR Manager","SathishTech"
+
+===============================================================================================================================
+
+# Import the Active Directory module
+Import-Module ActiveDirectory
+
+# Path to the CSV file with user details
+$csvPath = "C:\Temp\user.csv"
+
+# Import the CSV data
+$users = Import-Csv -Path $csvPath
+
+# Loop through each user and create in AD
+foreach ($user in $users) {
+    # Define the user properties
+    $userName = $user.UserName
+    $firstName = $user.FirstName
+    $lastName = $user.LastName
+    $password = ConvertTo-SecureString -String $user.Password -AsPlainText -Force
+    $department = $user.Department
+    $description = $user.Description  # Assuming a 'Description' column exists in the CSV
+    $office = $user.Office            # Assuming an 'Office' column exists in the CSV
+    $jobTitle = $user.JobTitle        # Assuming a 'JobTitle' column exists in the CSV
+    $company = $user.Company          # Assuming a 'Company' column exists in the CSV
+
+    # Define the AD user parameters
+    $userParams = @{
+        SamAccountName      = $userName
+        UserPrincipalName   = "$userName@sathishtech.com"
+        GivenName           = $firstName
+        Surname             = $lastName
+        Name                = "$firstName $lastName"
+        DisplayName         = "$firstName $lastName"
+        Department          = $department
+        Description         = $description  # Set the Description field here
+        Office              = $office       # Set the Office field here
+        Title               = $jobTitle     # Set the Job Title field here
+        Company             = $company      # Set the Company field here
+        AccountPassword     = $password
+        Enabled             = $true
+        PasswordNeverExpires = $true
+        Path                = "CN=Users,DC=sathishtech,DC=com"  # Adjust to your AD path
+    }
+
+    # Create the AD user
+    New-ADUser @userParams
+
+    # Optionally, add the user to groups (e.g., Domain Users)
+    # Add-ADGroupMember -Identity "Domain Users" -Members $userName
+
+    Write-Host "Created user: $firstName $lastName"
+}
+
+
+
+
