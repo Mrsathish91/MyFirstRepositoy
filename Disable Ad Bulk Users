@@ -1,0 +1,43 @@
+==================================================================
+UserName
+Sathish
+Karthik
+
+
+==================================================================
+# Import the Active Directory module
+Import-Module ActiveDirectory
+
+# Path to the CSV file with user details
+$csvPath = "C:\Temp\user.csv"
+
+# Import the CSV data
+$users = Import-Csv -Path $csvPath
+
+# Define the "Disabled" OU path
+$disabledOU = "OU=Disabled,DC=sathishtech,DC=com"  # Adjust to your actual "Disabled" OU path
+
+# Loop through each user and perform actions
+foreach ($user in $users) {
+    $userName = $user.UserName
+    
+    # Disable the user account
+    Disable-ADAccount -Identity $userName
+    Write-Host "Disabled user: $userName"
+
+    # Move the user to the "Disabled" OU
+    $currentUser = Get-ADUser -Identity $userName
+    Move-ADObject -Identity $currentUser.DistinguishedName -TargetPath $disabledOU
+    Write-Host "Moved user $userName to the 'Disabled' OU"
+
+    # Get the user's group memberships
+    $groups = Get-ADUser -Identity $userName -Properties MemberOf | Select-Object -ExpandProperty MemberOf
+
+    # Remove the user from all groups
+    foreach ($group in $groups) {
+        Remove-ADGroupMember -Identity $group -Members $userName -Confirm:$false
+        Write-Host "Removed user $userName from group $group"
+    }
+
+    Write-Host "Completed processing for user: $userName"
+}
