@@ -1,0 +1,27 @@
+===========================================================
+UserID, Alias
+800006, Gabriel
+800007, Sarah
+800008, Michael
+===========================================================
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+===========================================================
+
+# Import the CSV file with user IDs and aliases
+$users = Import-Csv "C:\path\to\your\users.csv"
+
+# Loop through each user and create mailboxes, set quotas, and disable default database quotas
+foreach ($user in $users) {
+    # Enable Mailbox for the User
+    Enable-Mailbox -Identity $user.UserID -Alias $user.Alias -Database "Mailbox Database 0080095770"
+    
+    # Disable the database quota defaults
+    Set-Mailbox -Identity $user.UserID -UseDatabaseQuotaDefaults $false
+    
+    # Set Mailbox Size Quotas
+    Set-Mailbox -Identity $user.UserID `
+        -IssueWarningQuota 0.09GB `
+        -ProhibitSendQuota 0.1GB `
+        -ProhibitSendReceiveQuota 0.1GB
+}
+============================================================
