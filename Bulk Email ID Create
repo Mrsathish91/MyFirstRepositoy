@@ -8,20 +8,52 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
 ===========================================================
 
 # Import the CSV file with user IDs and aliases
-$users = Import-Csv "C:\path\to\your\users.csv"
+$users = Import-Csv "C:\temp\MailID.csv"
 
-# Loop through each user and create mailboxes, set quotas, and disable default database quotas
+# Loop through each user and create mailboxes, set quotas, disable features
 foreach ($user in $users) {
     # Enable Mailbox for the User
-    Enable-Mailbox -Identity $user.UserID -Alias $user.Alias -Database "Mailbox Database 0080095770"
+    Enable-Mailbox -Identity $user.UserID -Alias $user.Alias -Database "MGMT500"
+    Write-Host "Enabled Mailbox for: $($user.UserID)" -ForegroundColor Green
     
     # Disable the database quota defaults
     Set-Mailbox -Identity $user.UserID -UseDatabaseQuotaDefaults $false
+    Write-Host "Disabled database quota defaults for: $($user.UserID)" -ForegroundColor Green
     
     # Set Mailbox Size Quotas
     Set-Mailbox -Identity $user.UserID `
         -IssueWarningQuota 0.09GB `
         -ProhibitSendQuota 0.1GB `
         -ProhibitSendReceiveQuota 0.1GB
+    Write-Host "Set Quotas for: $($user.UserID)" -ForegroundColor Green
+
+    # Disable Exchange ActiveSync
+    Set-CASMailbox -Identity $user.UserID -ActiveSyncEnabled $false
+    Write-Host "Disabled ActiveSync for: $($user.UserID)" -ForegroundColor Green
+
+    # Disable OWA for Devices
+    Set-CASMailbox -Identity $user.UserID -OWAforDevicesEnabled $false
+    Write-Host "Disabled OWA for Devices for: $($user.UserID)" -ForegroundColor Green
+
+    # Disable Outlook on the Web (OWA)
+    Set-CASMailbox -Identity $user.UserID -OWAEnabled $false
+    Write-Host "Disabled Outlook on the Web for: $($user.UserID)" -ForegroundColor Green
+
+    # Disable IMAP using Set-CASMailbox cmdlet
+    Set-CASMailbox -Identity $user.UserID -IMAPEnabled $false
+    Write-Host "Disabled IMAP for: $($user.UserID)" -ForegroundColor Green
+
+    # Disable POP3 using Set-CASMailbox cmdlet with the correct parameter -PopEnabled
+    Set-CASMailbox -Identity $user.UserID -PopEnabled $false
+    Write-Host "Disabled POP3 for: $($user.UserID)" -ForegroundColor Green
+
+    # Set the recipient limit to 30
+    Set-Mailbox -Identity $user.UserID -RecipientLimits 30
+    Write-Host "Set Recipient limit to 30 for: $($user.UserID)" -ForegroundColor Green
+
+    # Set the maximum message size to 2048 KB (2 MB)
+    Set-Mailbox -Identity $user.UserID -MaxSendSize 2048KB
+    Write-Host "Set Maximum message size (KB) to 2048 for: $($user.UserID)" -ForegroundColor Green
 }
+
 ============================================================
