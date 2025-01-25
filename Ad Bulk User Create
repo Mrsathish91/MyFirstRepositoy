@@ -2,12 +2,10 @@
 
 
 ===============================================================================================================================
-FirstName,LastName,UserName,Password,Department,Description,Office,JobTitle,Company
-Pall,Gov,Dha,Password123,IT,"New IT Administrator","Building A","System Administrator","SathishTech"
-Ranjith,Smith,Rsmith,Password456,HR,"HR Manager","Building B","HR Manager","SathishTech"
+FirstName,UserName,Password,Department,Description,Office,JobTitle,Company
+Sandilo,890002,Test123,CEO,"CEO Office","Building B","CEO","SathishTech"
 
 ===============================================================================================================================
-
 # Import the Active Directory module
 Import-Module ActiveDirectory
 
@@ -22,7 +20,6 @@ foreach ($user in $users) {
     # Define the user properties
     $userName = $user.UserName
     $firstName = $user.FirstName
-    $lastName = $user.LastName
     $password = ConvertTo-SecureString -String $user.Password -AsPlainText -Force
     $department = $user.Department
     $description = $user.Description  # Assuming a 'Description' column exists in the CSV
@@ -35,9 +32,8 @@ foreach ($user in $users) {
         SamAccountName      = $userName
         UserPrincipalName   = "$userName@sathishtech.com"
         GivenName           = $firstName
-        Surname             = $lastName
-        Name                = "$firstName $lastName"
-        DisplayName         = "$firstName $lastName"
+        Name                = $firstName
+        DisplayName         = $firstName
         Department          = $department
         Description         = $description  # Set the Description field here
         Office              = $office       # Set the Office field here
@@ -45,8 +41,8 @@ foreach ($user in $users) {
         Company             = $company      # Set the Company field here
         AccountPassword     = $password
         Enabled             = $true
-        PasswordNeverExpires = $true
-        Path                = "CN=Users,DC=sathishtech,DC=com"  # Adjust to your AD path
+        Path                = "OU=Manila,DC=sathishtech,DC=com"  # Adjust to your AD path
+        ChangePasswordAtLogon = $true         # Force password change at next logon
     }
 
     # Create the AD user
