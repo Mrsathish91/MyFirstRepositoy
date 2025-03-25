@@ -1,0 +1,23 @@
+=======================================================================================================================
+# Prompt the user to input group names (separate them by commas)
+$groupNamesInput = Read-Host "Enter the group names (separate with commas)"
+# Split the input into an array of group names
+$groups = $groupNamesInput.Split(',')
+
+# Loop through each group and get users, then combine the results
+$allUsers = foreach ($group in $groups) {
+    $group = $group.Trim()  # Remove any leading or trailing spaces from the group name
+    Get-ADGroupMember -Identity $group | Where-Object { $_.objectClass -eq "user" } | 
+    Select-Object @{Name="GroupName";Expression={$group}}, SamAccountName, Name
+}
+
+# Export the combined results to a CSV file
+$allUsers | Export-Csv -Path "C:\AD_Group_Members.csv" -NoTypeInformation
+
+=======================================================================================================================
+Output:
+
+GroupName	SamAccountName	Name
+GSR_L1	800001	Bob
+GSR_L1	800002	Charlie
+
