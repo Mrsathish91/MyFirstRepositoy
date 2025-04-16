@@ -1,0 +1,67 @@
+Install Required Dependencies:
+
+bash
+Copy
+Edit
+dnf groupinstall "Development Tools"
+dnf install -y readline-devel zlib-devel bison flex
+Download PostgreSQL 12 Source Code:
+
+bash
+Copy
+Edit
+cd /usr/local/src
+wget https://ftp.postgresql.org/pub/source/v12.13/postgresql-12.13.tar.bz2
+tar -xjf postgresql-12.13.tar.bz2
+cd postgresql-12.13
+Compile and Install PostgreSQL:
+
+bash
+Copy
+Edit
+./configure --prefix=/usr/local/pgsql
+make
+make install
+Create PostgreSQL User and Data Directory:
+
+bash
+Copy
+Edit
+useradd postgres
+mkdir /usr/local/pgsql/data
+chown postgres:postgres /usr/local/pgsql/data
+Initialize the Database:
+
+bash
+Copy
+Edit
+su - postgres
+/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data
+Start PostgreSQL:
+
+bash
+Copy
+Edit
+/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data start
+Set Up Environment Variables:
+
+Add the following lines to the .bash_profile of the postgres user:
+
+bash
+Copy
+Edit
+export PATH=$PATH:/usr/local/pgsql/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/pgsql/lib
+Then, source the profile:
+
+bash
+Copy
+Edit
+source ~/.bash_profile
+Verify Installation:
+
+bash
+Copy
+Edit
+psql --version
+This should display psql (PostgreSQL) 12.13.
