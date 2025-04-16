@@ -65,3 +65,60 @@ Copy
 Edit
 psql --version
 This should display psql (PostgreSQL) 12.13.
+
+Edit postgresql.conf
+Find and edit this file (it’s usually in /usr/local/pgsql/data/ for source installs):
+
+bash
+Copy
+Edit
+vi /usr/local/pgsql/data/postgresql.conf
+Look for this line:
+
+conf
+Copy
+Edit
+#listen_addresses = 'localhost'
+Change it to:
+
+conf
+Copy
+Edit
+listen_addresses = '*'
+Or to a specific IP (e.g., listen_addresses = '192.168.1.10') if you want tighter control.
+
+2. Edit pg_hba.conf
+Same directory: /usr/local/pgsql/data/pg_hba.conf
+
+Add a line like this at the bottom:
+
+conf
+Copy
+Edit
+host    all             all             0.0.0.0/0               md5
+Or limit it to a subnet, e.g.:
+
+conf
+Copy
+Edit
+host    all             all             192.168.1.0/24          md5
+md5 means password auth. If you're using peer or trust locally, make sure the remote rule is using md5.
+
+3. Restart PostgreSQL
+bash
+Copy
+Edit
+/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data restart
+4. Allow Port 5432 in the Firewall (if enabled)
+bash
+Copy
+Edit
+firewall-cmd --add-port=5432/tcp --permanent
+firewall-cmd --reload
+✅ Verify
+From another machine:
+
+bash
+Copy
+Edit
+psql -h your.server.ip -U postgres -d yourdb
