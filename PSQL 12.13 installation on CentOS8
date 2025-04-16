@@ -122,3 +122,35 @@ bash
 Copy
 Edit
 psql -h your.server.ip -U postgres -d yourdb
+
+
+
+
+[postgres@localhost data]$ psql -U postgres
+psql (12.13)
+Type "help" for help.
+
+postgres=# ^C
+postgres=# CREATE DATABASE popdb;
+CREATE DATABASE
+postgres=# CREATE USER sathish WITH ENCRYPTED PASSWORD 'Sat*******';
+CREATE ROLE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE popdb TO sathish;
+GRANT
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ popdb     | postgres | UTF8     | en_IN.UTF-8 | en_IN.UTF-8 | =Tc/postgres         +
+           |          |          |             |             | postgres=CTc/postgres+
+           |          |          |             |             | sathish=CTc/postgres
+ postgres  | postgres | UTF8     | en_IN.UTF-8 | en_IN.UTF-8 |
+ template0 | postgres | UTF8     | en_IN.UTF-8 | en_IN.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_IN.UTF-8 | en_IN.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(4 rows)
+
+postgres=#
+
+
