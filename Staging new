@@ -1,0 +1,100 @@
+On the Old Server (Ubuntu 22)
+1. Backup Website Files
+This includes WordPress core files, themes, plugins, and media.
+
+bash
+Copy
+Edit
+sudo tar -czvf wordpress-files.tar.gz /var/www/html/your-wordpress-folder
+2. Export WordPress Database
+bash
+Copy
+Edit
+mysqldump -u root -p your_db_name > wordpress_db.sql
+Transfer to New Server (Ubuntu 24)
+You can use scp or rsync to copy the files and DB:
+
+bash
+Copy
+Edit
+scp wordpress-files.tar.gz wordpress_db.sql user@new_server_ip:/home/user/
+On the New Server (Ubuntu 24)
+3. Install LAMP Stack
+bash
+Copy
+Edit
+sudo apt update
+sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql php-cli php-curl php-gd php-mbstring php-xml php-zip unzip
+4. Create a New Database
+bash
+Copy
+Edit
+sudo mysql -u root -p
+sql
+Copy
+Edit
+CREATE DATABASE your_db_name;
+CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON your_db_name.* TO 'wp_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+5. Import the Database
+bash
+Copy
+Edit
+mysql -u wp_user -p your_db_name < wordpress_db.sql
+6. Extract WordPress Files
+bash
+Copy
+Edit
+sudo tar -xzvf wordpress-files.tar.gz -C /var/www/html/
+Make sure they are in the right directory, usually /var/www/html/ or /var/www/html/your-site.
+
+7. Set Permissions
+bash
+Copy
+Edit
+sudo chown -R www-data:www-data /var/www/html/your-site
+sudo chmod -R 755 /var/www/html/your-site
+8. Configure Apache
+Create a virtual host file:
+
+bash
+Copy
+Edit
+sudo nano /etc/apache2/sites-available/your-site.conf
+Paste:
+
+apache
+Copy
+Edit
+<VirtualHost *:80>
+    ServerAdmin admin@yourdomain.com
+    DocumentRoot /var/www/html/your-site
+    ServerName yourdomain.com
+    ServerAlias www.yourdomain.com
+
+    <Directory /var/www/html/your-site/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+Enable site and rewrite:
+
+bash
+Copy
+Edit
+sudo a2ensite your-site.conf
+sudo a2enmod rewrite
+sudo systemctl reload apache2
+9. Update wp-config.php
+Update database name, user, and password:
+
+bash
+Copy
+Edit
+sudo nano /var/www/html/your-site/wp-config.php
